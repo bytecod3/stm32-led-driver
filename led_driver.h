@@ -10,7 +10,12 @@
 
 #ifndef LED_DRIVER_H
 #define LED_DRIVER_H
+#include <stdint.h>
 #include "stm32f4xx_hal.h" // change this to the stm32 you are using
+
+extern volatile uint32_t _brightness;
+extern uint8_t _s;
+
 
 /**
  * @brief Turn on LED connected to a GPIO pin
@@ -40,5 +45,20 @@ void LED_Deinitialize(GPIO_TypeDef* PORT, uint16_t pin);
  * @param interval how long to blink in milliseconds
  */
 void LED_Blocking_Blink(GPIO_TypeDef* PORT, uint16_t pin, uint16_t interval);
+
+
+void LED_Toggle(GPIO_TypeDef* PORT, uint16_t pin);
+
+
+/**
+ * @defgroup PWM functions
+ *
+ */
+
+
+/**
+ * @brief set LED brightness
+ */
+void LED_SetBrightness(TIM_TypeDef* TIMER, uint32_t brightness);
 
 #endif
