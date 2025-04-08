@@ -56,9 +56,15 @@ void LED_Toggle(GPIO_TypeDef* PORT, uint16_t pin);
  */
 
 
+void LED_PWM_Start(TIM_HandleTypeDef* TIMER, uint16_t CHANNEL);
+
+void LED_PWM_Stop(TIM_HandleTypeDef* TIMER, uint16_t CHANNEL);
+
 /**
  * @brief set LED brightness
  */
-void LED_SetBrightness(TIM_TypeDef* TIMER, uint32_t brightness);
+void LED_SetBrightness(TIM_HandleTypeDef* TIMER, uint16_t CHANNEL, uint32_t level);
+void LED_Fade(TIM_HandleTypeDef* TIMER, uint16_t CHANNEL,uint16_t steps);
+
 
 #endif

@@ -83,24 +83,31 @@ void LED_Toggle(GPIO_TypeDef* PORT, uint16_t pin) {
 	}
 }
 
-void LED_SetBrightness(TIM_TypeDef* TIMER, uint32_t brightness) {
+void LED_PWM_Start(TIM_HandleTypeDef* TIMER, uint16_t CHANNEL) {
 	if(TIMER != NULL) {
-		_brightness = brightness;
-		if(TIMER == TIM1) {
-			TIM1->CCR1 = _brightness;
-		}
+		HAL_TIM_PWM_Start(TIMER, CHANNEL);
+	}
+}
 
-		if(TIMER == TIM2) {
-			TIM2->CCR1 = _brightness;
-		}
+void LED_PWM_Stop(TIM_HandleTypeDef* TIMER, uint16_t CHANNEL) {
+	if(TIMER != NULL) {
+		HAL_TIM_PWM_Stop(TIMER, CHANNEL);
+	}
+}
 
-		if(TIMER == TIM3) {
-			TIM3->CCR1 = _brightness;
-		}
+/**
+ * @brief Set the LED brightness (duty cycle)
+ * @param level brightness level. Value between 0 and 10 (0->off, 10->max brightness)
+ */
+void LED_SetBrightness(TIM_HandleTypeDef* TIMER, uint16_t CHANNEL, uint32_t level) {
+	if(TIMER != NULL) {
+		uint32_t _arr = TIMER->Instance->ARR;
 
-		if(TIMER == TIM4) {
-			TIM4->CCR1 = _brightness;
-		}
+		float _b = level / 10;
+		uint32_t _ccr_val = _b * _arr; // convert to % of ARR
+
+		// set brightness
+		__HAL_TIM_SET_COMPARE(TIMER, CHANNEL, _ccr_val);
 
 	} else {
 		// todo: error handle
@@ -108,10 +115,24 @@ void LED_SetBrightness(TIM_TypeDef* TIMER, uint32_t brightness) {
 }
 
 /**
- * @brief Fade LED
+ * @brief Fade LED up and down
+ *
+ *
  */
-void LED_Fade(TIM_TypeDef* TIMER, uint16_t start, uint16_t stop) {
+void LED_Fade(TIM_HandleTypeDef* TIMER, uint16_t CHANNEL,uint16_t steps, uint16_t delay_ms) {
 	if(TIMER != NULL) {
+
+		uint16_t _arr_val = TIMER->Instance->ARR;
+
+		for(uint16_t h = 0; h < _arr_val; h += steps) {
+			__HAL_TIM_SET_COMPARE(TIMER, CHANNEL, h);
+			HAL_Delay(delay_ms);
+		}
+
+		for(uint16_t h = _arr_val; h > 0; h -= steps) {
+			__HAL_TIM_SET_COMPARE(TIMER, CHANNEL, h);
+			HAL_Delay(delay_ms);
+		}
 
 	} else {
 		// todo: error handle
