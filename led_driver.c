@@ -116,7 +116,10 @@ void LED_SetBrightness(TIM_HandleTypeDef* TIMER, uint16_t CHANNEL, uint32_t leve
 
 /**
  * @brief Fade LED up and down
- *
+ * @param TIMER Timer used to generate the PWM
+ * @param CHANNEL Timer channel being used to generate PWM
+ * @param steps number of counts to increment or decrement the duty_cycle
+ * @param delay_ms how much we should wait between each pulse. Higher value, LED fades slowly, Lower value, LED Fades quick
  *
  */
 void LED_Fade(TIM_HandleTypeDef* TIMER, uint16_t CHANNEL,uint16_t steps, uint16_t delay_ms) {
