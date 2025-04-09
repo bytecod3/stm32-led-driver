@@ -19,7 +19,7 @@ int main() {
     LED_On(TEST_LED_GPIO_Port, TEST_LED_Pin);
     HAL_Delay(1000);
     // turn off LED 
-    void LED_Off(TEST_LED_GPIO_Port, TEST_LED_Pin)
+    LED_Off(TEST_LED_GPIO_Port, TEST_LED_Pin);
     HAL_Delay(1000);
 
     while(1) {
